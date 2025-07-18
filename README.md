@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -20,7 +18,7 @@
       max-width: 400px;
       margin: auto;
     }
-    label, select, input, button {
+    label, select, button {
       display: block;
       width: 100%;
       margin: 10px 0;
@@ -43,12 +41,39 @@
 <body>
   <div class="card">
     <h2>Jeepney Fare Calculator</h2><label for="barangays">Barangays Traveled:</label>
-<input type="number" id="barangays" min="1" max="12" value="4">
+<select id="barangays">
+  <option value="1">1</option>
+  <option value="2">2</option>
+  <option value="3">3</option>
+  <option value="4" selected>4</option>
+  <option value="5">5</option>
+  <option value="6">6</option>
+  <option value="7">7</option>
+  <option value="8">8</option>
+  <option value="9">9</option>
+  <option value="10">10</option>
+  <option value="11">11</option>
+  <option value="12">12</option>
+</select>
 
 <label for="passengerType">Passenger Type:</label>
 <select id="passengerType">
   <option value="regular">Regular</option>
   <option value="student">Senior/Student</option>
+</select>
+
+<label for="passengerCount">Number of Passengers:</label>
+<select id="passengerCount">
+  <option value="1" selected>1</option>
+  <option value="2">2</option>
+  <option value="3">3</option>
+  <option value="4">4</option>
+  <option value="5">5</option>
+  <option value="6">6</option>
+  <option value="7">7</option>
+  <option value="8">8</option>
+  <option value="9">9</option>
+  <option value="10">10</option>
 </select>
 
 <label for="cash">Cash Given (₱):</label>
@@ -66,19 +91,21 @@
     function calculateFare() {
       const barangays = parseInt(document.getElementById('barangays').value);
       const passengerType = document.getElementById('passengerType').value;
+      const passengerCount = parseInt(document.getElementById('passengerCount').value);
       const cash = parseInt(document.getElementById('cash').value);
 
       const baseFare = passengerType === 'regular' ? 13 : 11;
       const extraBarangays = Math.max(0, barangays - 4);
-      const fare = baseFare + (extraBarangays * 2);
-      const change = cash - fare;
+      const farePerPassenger = baseFare + (extraBarangays * 2);
+      const totalFare = farePerPassenger * passengerCount;
+      const change = cash - totalFare;
 
       const output = document.getElementById('output');
       if (change >= 0) {
-        output.innerHTML = `Fare: ₱${fare} <br> Change: ₱${change}`;
+        output.innerHTML = `Total Fare: ₱${totalFare} <br> Change: ₱${change}`;
       } else {
-        output.innerHTML = `Fare: ₱${fare} <br> ❌ Not enough cash (short ₱${-change})`;
+        output.innerHTML = `Total Fare: ₱${totalFare} <br> ❌ Not enough cash (short ₱${-change})`;
       }
     }
   </script></body>
-</html>
+</html
