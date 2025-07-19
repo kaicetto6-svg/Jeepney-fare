@@ -18,7 +18,7 @@
       max-width: 400px;
       margin: auto;
     }
-    label, select, input, button {
+    label, select, input, button, datalist {
       display: block;
       width: 100%;
       margin: 10px 0;
@@ -40,8 +40,27 @@
 </head>
 <body>
   <div class="card">
-    <h2>Jeepney Fare Calculator</h2><label for="barangays">How many barangays will you travel?</label>
-<input type="number" id="barangays" min="1" max="20" placeholder="e.g. 4">
+    <h2>Jeepney Fare Calculator</h2><label for="fromBarangay">From Barangay:</label>
+<input type="text" id="fromBarangay" list="barangayList" placeholder="e.g. Bagumbayan">
+
+<label for="toBarangay">To Barangay:</label>
+<input type="text" id="toBarangay" list="barangayList" placeholder="e.g. Wawa">
+
+<datalist id="barangayList">
+  <option value="Bagumbayan">
+  <option value="San Jose">
+  <option value="Matungao">
+  <option value="Panginay (Guiguinto)">
+  <option value="Panginay (Balagtas)">
+  <option value="Wawa">
+  <option value="Longos">
+  <option value="Borol 1st">
+  <option value="Borol 2nd">
+  <option value="Tibag">
+  <option value="San Juan">
+  <option value="Sto. Rosario">
+  <option value="Sta. Ana">
+</datalist>
 
 <label for="passengerType">Passenger Type:</label>
 <select id="passengerType">
@@ -75,28 +94,49 @@
 <div class="result" id="output"></div>
 
   </div>  <script>
+    const barangayList = [
+      "Bagumbayan",
+      "San Jose",
+      "Matungao",
+      "Panginay (Guiguinto)",
+      "Panginay (Balagtas)",
+      "Wawa",
+      "Longos",
+      "Borol 1st",
+      "Borol 2nd",
+      "Tibag",
+      "San Juan",
+      "Sto. Rosario",
+      "Sta. Ana"
+    ];
+
     function calculateFare() {
-      const barangays = parseInt(document.getElementById('barangays').value);
+      const from = document.getElementById('fromBarangay').value.trim();
+      const to = document.getElementById('toBarangay').value.trim();
       const passengerType = document.getElementById('passengerType').value;
       const passengerCount = parseInt(document.getElementById('passengerCount').value);
       const cash = parseInt(document.getElementById('cash').value);
 
-      if (isNaN(barangays) || barangays < 1) {
-        document.getElementById('output').innerHTML = 'Please enter a valid number of barangays.';
+      const fromIndex = barangayList.findIndex(b => b.toLowerCase() === from.toLowerCase());
+      const toIndex = barangayList.findIndex(b => b.toLowerCase() === to.toLowerCase());
+
+      if (fromIndex === -1 || toIndex === -1) {
+        document.getElementById('output').innerHTML = 'Invalid barangay name. Please use a valid name from the list.';
         return;
       }
 
+      const barangaysTraveled = Math.abs(toIndex - fromIndex) + 1;
       const baseFare = passengerType === 'regular' ? 13 : 11;
-      const extraBarangays = Math.max(0, barangays - 4);
+      const extraBarangays = Math.max(0, barangaysTraveled - 4);
       const farePerPassenger = baseFare + (extraBarangays * 2);
       const totalFare = farePerPassenger * passengerCount;
       const change = cash - totalFare;
 
       const output = document.getElementById('output');
       if (change >= 0) {
-        output.innerHTML = `Total Fare: ₱${totalFare} <br> Change: ₱${change}`;
+        output.innerHTML = `Barangays Traveled: ${barangaysTraveled}<br>Total Fare: ₱${totalFare} <br> Change: ₱${change}`;
       } else {
-        output.innerHTML = `Total Fare: ₱${totalFare} <br> ❌ Not enough cash (short ₱${-change})`;
+        output.innerHTML = `Barangays Traveled: ${barangaysTraveled}<br>Total Fare: ₱${totalFare} <br> ❌ Not enough cash (short ₱${-change})`;
       }
     }
   </script></body>
