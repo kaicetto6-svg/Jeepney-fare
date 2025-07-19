@@ -18,7 +18,7 @@
       max-width: 400px;
       margin: auto;
     }
-    label, select, input, button, datalist {
+    label, select, input, button {
       display: block;
       width: 100%;
       margin: 10px 0;
@@ -36,31 +36,17 @@
       margin-top: 15px;
       font-weight: bold;
     }
+    .info {
+      font-size: 14px;
+      color: #666;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
   <div class="card">
-    <h2>Jeepney Fare Calculator</h2><label for="fromBarangay">From Barangay:</label>
-<input type="text" id="fromBarangay" list="barangayList" placeholder="e.g. Bagumbayan">
-
-<label for="toBarangay">To Barangay:</label>
-<input type="text" id="toBarangay" list="barangayList" placeholder="e.g. Wawa">
-
-<datalist id="barangayList">
-  <option value="Bagumbayan">
-  <option value="San Jose">
-  <option value="Matungao">
-  <option value="Panginay (Guiguinto)">
-  <option value="Panginay (Balagtas)">
-  <option value="Wawa">
-  <option value="Longos">
-  <option value="Borol 1st">
-  <option value="Borol 2nd">
-  <option value="Tibag">
-  <option value="San Juan">
-  <option value="Sto. Rosario">
-  <option value="Sta. Ana">
-</datalist>
+    <h2>Jeepney Fare Calculator</h2><label for="route">Route (e.g. Wawa - San Jose):</label>
+<input type="text" id="route" placeholder="e.g. Wawa - San Jose">
 
 <label for="passengerType">Passenger Type:</label>
 <select id="passengerType">
@@ -92,36 +78,45 @@
 <button onclick="calculateFare()">Calculate</button>
 
 <div class="result" id="output"></div>
+<div class="info">
+  Valid barangays: Bagumbayan, San Jose, Matungao, Panginay (Guiguinto), Panginay (Balagtas), Wawa, Longos, Borol 1st, Borol 2nd, Tibag, San Juan, Sto. Rosario, Sta. Ana
+</div>
 
   </div>  <script>
     const barangayList = [
-      "Bagumbayan",
-      "San Jose",
-      "Matungao",
-      "Panginay (Guiguinto)",
-      "Panginay (Balagtas)",
-      "Wawa",
-      "Longos",
-      "Borol 1st",
-      "Borol 2nd",
-      "Tibag",
-      "San Juan",
-      "Sto. Rosario",
-      "Sta. Ana"
+      "bagumbayan",
+      "san jose",
+      "matungao",
+      "panginay (guiguinto)",
+      "panginay (balagtas)",
+      "wawa",
+      "longos",
+      "borol 1st",
+      "borol 2nd",
+      "tibag",
+      "san juan",
+      "sto. rosario",
+      "sta. ana"
     ];
 
+    function normalize(str) {
+      return str.trim().toLowerCase();
+    }
+
     function calculateFare() {
-      const from = document.getElementById('fromBarangay').value.trim();
-      const to = document.getElementById('toBarangay').value.trim();
+      const routeInput = document.getElementById('route').value;
+      const [fromRaw, toRaw] = routeInput.split('-').map(s => normalize(s || ""));
       const passengerType = document.getElementById('passengerType').value;
       const passengerCount = parseInt(document.getElementById('passengerCount').value);
       const cash = parseInt(document.getElementById('cash').value);
 
-      const fromIndex = barangayList.findIndex(b => b.toLowerCase() === from.toLowerCase());
-      const toIndex = barangayList.findIndex(b => b.toLowerCase() === to.toLowerCase());
+      const fromIndex = barangayList.indexOf(fromRaw);
+      const toIndex = barangayList.indexOf(toRaw);
+
+      const output = document.getElementById('output');
 
       if (fromIndex === -1 || toIndex === -1) {
-        document.getElementById('output').innerHTML = 'Invalid barangay name. Please use a valid name from the list.';
+        output.innerHTML = `❌ Invalid barangay name. Use format like: Wawa - San Jose`;
         return;
       }
 
@@ -132,11 +127,10 @@
       const totalFare = farePerPassenger * passengerCount;
       const change = cash - totalFare;
 
-      const output = document.getElementById('output');
       if (change >= 0) {
-        output.innerHTML = `Barangays Traveled: ${barangaysTraveled}<br>Total Fare: ₱${totalFare} <br> Change: ₱${change}`;
+        output.innerHTML = `Barangays Traveled: ${barangaysTraveled}<br>Total Fare: ₱${totalFare}<br>Change: ₱${change}`;
       } else {
-        output.innerHTML = `Barangays Traveled: ${barangaysTraveled}<br>Total Fare: ₱${totalFare} <br> ❌ Not enough cash (short ₱${-change})`;
+        output.innerHTML = `Barangays Traveled: ${barangaysTraveled}<br>Total Fare: ₱${totalFare}<br>❌ Not enough cash (short ₱${-change})`;
       }
     }
   </script></body>
