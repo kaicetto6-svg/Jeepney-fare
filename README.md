@@ -18,7 +18,7 @@
       max-width: 400px;
       margin: auto;
     }
-    label, select, button {
+    label, select, input, button {
       display: block;
       width: 100%;
       margin: 10px 0;
@@ -40,21 +40,8 @@
 </head>
 <body>
   <div class="card">
-    <h2>Jeepney Fare Calculator</h2><label for="barangays">Barangays Traveled:</label>
-<select id="barangays">
-  <option value="1">1</option>
-  <option value="2">2</option>
-  <option value="3">3</option>
-  <option value="4" selected>4</option>
-  <option value="5">5</option>
-  <option value="6">6</option>
-  <option value="7">7</option>
-  <option value="8">8</option>
-  <option value="9">9</option>
-  <option value="10">10</option>
-  <option value="11">11</option>
-  <option value="12">12</option>
-</select>
+    <h2>Jeepney Fare Calculator</h2><label for="barangays">How many barangays will you travel?</label>
+<input type="number" id="barangays" min="1" max="20" placeholder="e.g. 4">
 
 <label for="passengerType">Passenger Type:</label>
 <select id="passengerType">
@@ -93,6 +80,11 @@
       const passengerType = document.getElementById('passengerType').value;
       const passengerCount = parseInt(document.getElementById('passengerCount').value);
       const cash = parseInt(document.getElementById('cash').value);
+
+      if (isNaN(barangays) || barangays < 1) {
+        document.getElementById('output').innerHTML = 'Please enter a valid number of barangays.';
+        return;
+      }
 
       const baseFare = passengerType === 'regular' ? 13 : 11;
       const extraBarangays = Math.max(0, barangays - 4);
