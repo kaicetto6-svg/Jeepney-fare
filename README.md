@@ -40,20 +40,20 @@
 </head>
 <body>
   <div class="card">
-    <h2>Jeepney Fare Calculator</h2><label for="barangays">Barangays Traveled:</label>
+    <h2>Jeepney Fare Calculator</h2><label for="barangays">Select End Barangay:</label>
 <select id="barangays">
-  <option value="1">1</option>
-  <option value="2">2</option>
-  <option value="3">3</option>
-  <option value="4" selected>4</option>
-  <option value="5">5</option>
-  <option value="6">6</option>
-  <option value="7">7</option>
-  <option value="8">8</option>
-  <option value="9">9</option>
-  <option value="10">10</option>
-  <option value="11">11</option>
-  <option value="12">12</option>
+  <option value="1">Bagumbayan + San Jose</option>
+  <option value="2">Matungao</option>
+  <option value="3">Panginay (Guiguinto)</option>
+  <option value="4">Panginay (Balagtas)</option>
+  <option value="5">Wawa</option>
+  <option value="6">Longos</option>
+  <option value="7">Borol 1st</option>
+  <option value="8">Borol 2nd</option>
+  <option value="9">Tibag</option>
+  <option value="10">San Juan + Sto. Rosario</option>
+  <option value="11">Sta. Ana</option>
+  <option value="12">Other</option>
 </select>
 
 <label for="passengerType">Passenger Type:</label>
@@ -89,13 +89,13 @@
 
   </div>  <script>
     function calculateFare() {
-      const barangays = parseInt(document.getElementById('barangays').value);
+      const barangayIndex = parseInt(document.getElementById('barangays').value);
       const passengerType = document.getElementById('passengerType').value;
       const passengerCount = parseInt(document.getElementById('passengerCount').value);
       const cash = parseInt(document.getElementById('cash').value);
 
       const baseFare = passengerType === 'regular' ? 13 : 11;
-      const extraBarangays = Math.max(0, barangays - 4);
+      const extraBarangays = Math.max(0, barangayIndex - 4);
       const farePerPassenger = baseFare + (extraBarangays * 2);
       const totalFare = farePerPassenger * passengerCount;
       const change = cash - totalFare;
